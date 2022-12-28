@@ -3,12 +3,13 @@
 A common use-pattern is to deploy a number of cloud resources in private subnets (i.e. no ingress from Internet).  As a result, many folks will deploy a "bastion node" in a public subnet which allows SSH from the Internet (or specific IP or ranges).  Then SSH to their private resources.  
 
 ## Challenge
-As you likely know, the only allowed ssh connection to AWS EC2 instance is as the ec2-user using an key-pair that was selected during the node deployment.  Therefore, you would need to copy the private key to the bastion node.  Or not...
+As you likely know, the only allowed ssh connection to AWS EC2 instance is as the ec2-user using an key-pair that was selected during the node deployment.  To connect to your private node, you would need to copy the private key to the bastion node.  Or not...
 
-(copying your private key to your bastion creates additional risk.  If the bastion was to become comprimised, that key could be then gathered and used.
+NOTE: copying your private key to your bastion creates additional risk which you need to assess. If the bastion was to become compromised, that key could be then gathered and used.
+Additionally, there are risks associated with using SSH Agent Fowarding.  If the bastion was comprimised the socket created for the Agent could be exploited.  Therefore, you should limit what IP(s) can access the bastion.  And you can also use the ssh option 'ProxyCommand' (I will detail this in a future post).
 
 ## Solution
-You can use SSH Agent Forwarding (ssh -A) to forward your ssh key.
+You can use SSH Agent Forwarding (ssh -A) to forward your ssh key.  This means that you do not need to add your private key to the bastion.
 
 ## References
 [openSSH man pages](https://www.openssh.com/manual.html)  
